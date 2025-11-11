@@ -1,0 +1,62 @@
+@startuml 
+skinparam style strictuml
+skinparam classAttributeIconSize 0 
+class "Timer"{
+    +raz()
+    + int valeur()
+}
+class "lecteur_carte"{
+    +void lire_carte()
+}
+class "Voyants"{
+    +set_charge(int voyant)
+    + blink_charge(int voyant)
+    + set_prise(int voyant)
+     + set_dispo(int voyant)
+    + set_defaut(int voyant)
+    
+}
+class "Prise"{
+    +deverouiller_trappe()
+    +verouiller_trappe()
+    + set_prise()
+}
+    
+class "base_clients"{
+    + int authentifier_operateur(int id)
+    + int authentifier_client(int id)
+    +void  reprise()
+}
+class "bouton"{
+    + int charge()
+
+    + int stop()
+}
+class "Generateur_save"{
+    -void mef()
+    + void deconnecter()
+    + void  fermer_AC()
+    + void ouvrir_AC()
+    +void charger()
+    +float tension()
+    +void generer_PWM()
+}
+/' Les relations'/
+Generateur_save "1"-down-> "1" Prise : verouiller/déverouiller trappe
+Generateur_save "1"-up-> "1" Voyants : controler voyants
+
+
+/'Generateur_save "1"-> "1" Timer : utiliser timer'/
+
+Generateur_save "1"-left->"1" bouton : accede
+
+lecteur_carte "1"-left-> "1" bouton : accede
+lecteur_carte "1"-up-> "1" base_clients : verifier authentification
+lecteur_carte "1"-> "1" Voyants : pilote
+lecteur_carte "1"-> "1" Generateur_save : commande
+
+
+
+
+
+@enduml

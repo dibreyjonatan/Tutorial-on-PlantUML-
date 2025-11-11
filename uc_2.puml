@@ -1,0 +1,86 @@
+@startuml
+skinparam style strictuml
+actor client 
+actor vehicule
+vehicule -> Generateur_save : charge batterie 
+activate Generateur_save
+deactivate Generateur_save
+Generateur_save -> Voyants : voyant charge ROUGE 
+activate Voyants
+deactivate Voyants
+Generateur_save -> Prise : déverouiller trappe
+activate Prise
+deactivate Prise
+Generateur_save -> Prise  : générer 12V DC 
+activate Prise
+deactivate Prise 
+
+client -> Prise : connecter véhicule à la prise 
+activate Prise
+deactivate Prise
+Prise -> vehicule : prise branché
+activate vehicule
+deactivate vehicule
+
+vehicule  -->  Generateur_save  -- :  Tension chute à 9V 
+Generateur_save -> Voyants : voyant charge VERT
+activate Voyants
+deactivate Voyants
+
+Generateur_save -> Prise : verrouiller trappe
+activate Prise
+deactivate Prise
+
+Generateur_save -> vehicule : générer AC 1kHz
+activate vehicule
+deactivate vehicule
+vehicule -> vehicule : contacteur S2 fermé 
+activate vehicule
+deactivate vehicule
+
+vehicule -> Generateur_save : chuter la tension à 6V 
+activate Generateur_save
+deactivate Generateur_save
+Generateur_save -> Generateur_save : fermer AC
+activate Generateur_save
+deactivate Generateur_save
+Generateur_save -> Generateur_save : Generer signal PWM +6V/-12V
+activate Generateur_save
+deactivate Generateur_save
+Generateur_save -> vehicule : AC Variable 6V 
+activate vehicule
+deactivate vehicule
+return  AC 6V 
+
+
+vehicule -> vehicule : detecte batterie pleine  
+activate vehicule
+deactivate vehicule
+
+vehicule -> vehicule : contacteur S2 ouvert
+activate vehicule
+deactivate vehicule
+
+vehicule --> Generateur_save -- : Tension à 9V 
+
+
+Generateur_save ->  Generateur_save : signal remonte à +9V/-12V  
+activate Generateur_save
+deactivate Generateur_save 
+
+/'Generateur_save ->  Generateur_save : Ouvrir AC 
+activate Generateur_save
+deactivate Generateur_save'/
+ 
+Generateur_save -> Voyants : voyant charge VERT
+activate Voyants
+deactivate Voyants
+
+
+
+
+
+
+
+
+@enduml 

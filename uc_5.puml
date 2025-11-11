@@ -1,0 +1,26 @@
+@startuml 
+skinparam style strictuml
+
+actor operateur 
+  
+
+operateur -> base_clients : l'operateur s'authentifie
+    activate base_clients   
+   return bienvenue 
+    deactivate base_clients
+    
+  
+    operateur -> base_clients : demande statistiques de la station
+    activate base_clients
+    deactivate base_clients
+
+    base_clients -> base_clients : recuperation données
+    activate base_clients   
+    deactivate base_clients
+
+
+    base_clients -> operateur : renvoie les statistiques
+    /'activate operateur
+    deactivate operateur'/
+   
+   @enduml

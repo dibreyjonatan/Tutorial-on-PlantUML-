@@ -1,0 +1,86 @@
+@startuml
+skinparam style strictuml
+actor client 
+actor vehicule 
+client -> lecteur_carte : insérerCarte
+activate lecteur_carte
+
+alt#Gold #LightBlue Authentification Reussit 
+
+ lecteur_carte -> base_clients : authentifier
+    activate base_clients
+    return OK 
+    deactivate base_clients
+    deactivate lecteur_carte
+
+    lecteur_carte -> Voyants : Voyant charge à vert  ( clignote 8s )
+    activate Voyants
+    deactivate Voyants
+
+    client -> bouton : appuyerButton
+    activate bouton
+    note left  of client 
+      Le client dispose de 60s max pour appuyer sur le bouton
+    end note    
+    bouton -> Voyants : voyant disponible éteint 
+    activate Voyants
+    deactivate bouton
+    deactivate  Voyants
+
+    Voyants -> client : éteint 
+    client -> lecteur_carte : retirerCarte
+    activate lecteur_carte
+    deactivate lecteur_carte
+
+    lecteur_carte -> Controlleur_charge : Demande de recharge 
+    activate Controlleur_charge
+    Controlleur_charge -> vehicule  : charge batterie [ Ref UC_2 ]
+    activate vehicule
+    vehicule -> Controlleur_charge : fin de charge
+
+    vehicule --> lecteur_carte -- : Vehicule reprise 
+    deactivate Controlleur_charge
+    deactivate vehicule
+   
+    client -> lecteur_carte : retrait véhicule [ ref UC_3 ]
+    activate lecteur_carte
+    deactivate  lecteur_carte
+    lecteur_carte -> Voyants : Voyant  disponible vert allumé
+    activate Voyants
+    deactivate Voyants
+else #Pink Authentification Echouée 
+    lecteur_carte -> base_clients : authentifier
+    activate base_clients
+    return echec 
+    deactivate base_clients
+    deactivate lecteur_carte
+    lecteur_carte -> Voyants : Voyant charge à rouge ( clignote 8s )
+    activate Voyants
+    deactivate Voyants
+
+else #yellow Bouton non appuyé dans le délai imparti 
+    
+ lecteur_carte -> base_clients : authentifier
+    activate base_clients
+    return OK 
+    deactivate base_clients
+    deactivate lecteur_carte
+    
+    lecteur_carte -> Voyants : Voyant charge à vert  ( clignote 8s )
+    activate Voyants
+    deactivate Voyants
+
+    note left  of client 
+      Le système détecte que le   bouton n'a pas été appuyé dans le délai imparti
+    end note
+    lecteur_carte -> Voyants : Voyant disponible  allumé en vert 
+    activate Voyants
+    deactivate Voyants
+
+     client -> lecteur_carte : retirerCarte
+    activate lecteur_carte
+    deactivate lecteur_carte
+
+
+end
+@enduml 

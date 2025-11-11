@@ -1,0 +1,83 @@
+@startuml 
+skinparam style strictuml
+actor client
+actor operateur 
+  operateur -> base_clients : l'operateur s'authentifie
+    activate base_clients   
+   return bienvenue 
+    deactivate base_clients
+
+
+alt#Gold #LightBlue Ajouter un client à la base de données 
+  client -> operateur : fournit informations personnelles
+  activate operateur
+ deactivate operateur
+    /'operateur -> base_clients : l'operateur s'authentifie
+    activate base_clients   
+   return bienvenue 
+   deactivate base_clients'/ 
+    operateur -> base_clients : ajouter nouveau client
+    activate base_clients
+    deactivate base_clients
+
+    base_clients -> base_clients : générer numéro client
+    activate base_clients   
+    deactivate base_clients
+
+
+    base_clients -> operateur : renvoie un numéro client
+    activate operateur
+    deactivate operateur
+    operateur -> client : reçoit numéro client
+    /'activate client
+    deactivate client'/
+
+else #yellow Modification données clients
+    client -> operateur : fournit numéro client et nouvelles informations
+    activate operateur
+     deactivate operateur
+   /'   operateur -> base_clients : l'operateur s'authentifie
+    activate base_clients   
+   return bienvenue 
+    deactivate base_clients'/
+
+        operateur -> base_clients : modifier données client
+        activate base_clients
+        deactivate base_clients
+
+        base_clients -> base_clients : mise à jour infos client
+    activate base_clients   
+    deactivate base_clients
+        base_clients -> operateur : confirme modification
+        activate operateur
+        deactivate operateur
+        operateur -> client : informe modification réussie
+      /'  activate client
+        deactivate client   '/
+
+else #gold Supprimer client
+    client -> operateur : fournit numéro client
+    activate operateur
+     deactivate operateur
+    
+    
+
+        operateur -> base_clients : supprimer client
+        activate base_clients
+        deactivate base_clients
+
+        base_clients -> base_clients : suppression client
+   activate base_clients   
+    deactivate base_clients
+
+        base_clients -> operateur : confirme suppression
+        activate operateur
+        deactivate operateur
+        operateur -> client : informe suppression réussie
+        /'activate client
+        deactivate client'/
+
+  
+end 
+@enduml 
+

@@ -1,0 +1,119 @@
+@startuml 
+skinparam style strictuml
+actor client
+actor vehicule
+
+client -> lecteur_carte : insère carte 
+activate lecteur_carte
+deactivate  lecteur_carte  
+
+alt#Gold #LightBlue Authentification Reussit 
+
+lecteur_carte -> base_clients : vérifier authentification
+activate base_clients
+return OK
+deactivate base_clients
+lecteur_carte -> Generateur_save : ouvrir contacteur AC
+activate Generateur_save
+deactivate Generateur_save
+
+Generateur_save -> Prise : déverouiller trappe
+activate Prise
+deactivate Prise
+
+client -> Prise : deconnecter véhicule à la prise
+activate Prise
+deactivate Prise
+
+Generateur_save -> Prise : générer 12V DC
+activate Prise
+deactivate Prise
+Generateur_save -> Voyants : voyant CHARGE éteint
+activate Voyants
+deactivate Voyants
+
+Generateur_save -> Prise : verrouiller trappe
+activate Prise
+deactivate Prise
+
+Generateur_save -> Voyants : voyant prise s'éteint 
+activate Voyants
+deactivate Voyants
+
+Generateur_save -> Voyants : voyant disponible allumer  
+activate Voyants
+deactivate Voyants
+client -> vehicule :  récupère véhicule 
+/'activate vehicule
+deactivate vehicule'/
+
+else #yellow Authentification Echouée 
+    lecteur_carte -> base_clients : vérifier authentification
+    activate base_clients
+    return echec
+    deactivate base_clients
+    Generateur_save -> Generateur_save  : continue charge ref UC2
+    activate Generateur_save
+    deactivate Generateur_save
+
+    
+    client -> lecteur_carte : retirer carte
+    activate lecteur_carte
+    deactivate lecteur_carte 
+else #gold   Bouton STOP appuyé pendant la charge
+
+    lecteur_carte -> base_clients : vérifier authentification
+    activate base_clients
+    return OK
+    deactivate base_clients
+    
+    client -> bouton : appuie sur le button STOP 
+    activate bouton
+    deactivate bouton
+    bouton -> vehicule :  requete ouvre contacteur S2
+    activate vehicule
+    deactivate vehicule
+       
+    vehicule -> vehicule : ouverture du contacteur S2
+    activate vehicule
+    deactivate vehicule
+
+    vehicule -> Generateur_save : arreter la charge
+    activate Generateur_save
+    deactivate Generateur_save
+    Generateur_save -> Generateur_save : signal remonte à +9V/-12V
+    activate Generateur_save    
+    deactivate Generateur_save
+    Generateur_save -> Generateur_save : Ouvrir contacteur AC
+    activate Generateur_save
+    deactivate Generateur_save
+    Generateur_save -> Prise : déverouiller trappe
+    activate Prise
+    deactivate Prise
+    client -> Prise : deconnecter véhicule à la prise
+    activate Prise  
+    deactivate Prise
+    Generateur_save -> Prise : générer 12V DC
+    activate Prise      
+    deactivate Prise
+    Generateur_save -> Voyants : voyant CHARGE éteint
+    activate Voyants
+    deactivate Voyants
+    Generateur_save -> Prise : verrouiller trappe
+    activate Prise
+    deactivate Prise
+    Generateur_save -> Voyants : voyant prise s'éteint 
+    activate Voyants    
+    deactivate Voyants
+    Generateur_save -> Voyants : voyant disponible allumer  
+    activate Voyants    
+    deactivate Voyants
+    client -> vehicule :  récupère véhicule
+    /'activate vehicule
+    deactivate vehicule'/
+
+
+   
+end 
+@enduml 
+
