@@ -1,0 +1,15 @@
+@startuml
+
+hide empty description
+
+[*] --> IDLE : rst 
+IDLE --> IDLE : in_pwm='1'
+IDLE --> ATTENTE : in_pwm='0'
+ATTENTE --> ATTENTE : in_pwm='0'
+ATTENTE --> COUNT : in_pwm='1'
+COUNT -->  WAIT_WINDOW : in_pwm='0'
+WAIT_WINDOW --> WAIT_CMD : continue='0' & windows_done='1'
+WAIT_WINDOW --> IDLE: continue='1' & windows_done='1'
+WAIT_CMD --> WAIT_CMD : cmd='0'
+WAIT_CMD -left->IDLE : cmd='1'
+@enduml 
