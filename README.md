@@ -45,6 +45,7 @@ java -jar plantuml.jar class.puml
 
 ### Example de Diagram
 
+![exemple_de_statechart](state_example.png)
 ![exemple_de_statechart](state_charts.png)
 ###### statechart réalisé avec PlantUml 
 ![exemple_de_diagramme_de_sequence](use_case.png)
