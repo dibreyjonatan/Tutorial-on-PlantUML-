@@ -53,4 +53,4 @@ java -jar plantuml.jar class.puml
 
 *NB:*
 
-> Les codes ici sont des exemples que j'ai écrit qui me serviront plutard comme répère pour faire des d'autres diagrammes de systèmes plus complexes.
+> Les codes ici sont des exemples que j'ai écrit qui me serviront plutard comme répère pour faire des diagrammes de système plus complexe.
