@@ -1,0 +1,27 @@
+@startuml
+
+hide empty description
+
+[*] --> DECISION : rst 
+DECISION --> WAIT_CMD : continu='0'
+DECISION -left-> IDLE : continu='1'
+
+WAIT_CMD --> DECISION : continu='1'
+WAIT_CMD -left-> WAIT_CMD : cmd='0'
+WAIT_CMD -down-> IDLE : cmd='1'
+
+IDLE -up-> IDLE : in_pwm='1'
+IDLE -down-> ATTENTE : in_pwm='0'
+
+ATTENTE --> ATTENTE : in_pwm='0'
+ATTENTE --> COUNT : in_pwm='1'
+
+COUNT -->  WAIT_WINDOW : in_pwm='0'
+
+WAIT_WINDOW --> DECISION :  fin_tim='1' & continue='0'
+WAIT_WINDOW --> WAIT_PERIOD:  fin_tim='1' &  continue='1' 
+
+WAIT_PERIOD --> IDLE : fin_timer_1s='1' 
+
+
+@enduml 
