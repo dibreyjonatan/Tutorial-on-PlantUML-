@@ -16,8 +16,8 @@ IDLE -down-> ATTENTE : in_pwm='0'
 ATTENTE --> ATTENTE : in_pwm='0'
 ATTENTE --> COUNT : in_pwm='1'
 
-COUNT -->  WAIT_WINDOW : in_pwm='0'
-
+COUNT -->  LOAD: in_pwm='0'
+LOAD --> WAIT_WINDOW 
 WAIT_WINDOW --> DECISION :  fin_tim='1' & continue='0'
 WAIT_WINDOW --> WAIT_PERIOD:  fin_tim='1' &  continue='1' 
 
