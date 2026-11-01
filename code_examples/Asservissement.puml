@@ -1,0 +1,18 @@
+@startuml
+
+hide empty description
+
+[*] --> IDLE
+IDLE--> COMPARAISON : consigne
+COMPARAISON --> STOP : |dref-consigne| < 2m 
+STOP --> [*] 
+COMPARAISON --> DEPLACE_BAS  : Consigne - dref > 2m 
+DEPLACE_BAS --> ARRET_TRANSMISSION : Timeout(0.5s)
+ARRET_TRANSMISSION --> COMPARAISON : fin transmission
+COMPARAISON --> DEPLACE_HAUT  : dref - Consigne > 2m 
+DEPLACE_HAUT --> ARRET_TRANSMISSION  : Timeout(0.5s)
+''' ARRET_TRANSMISSION --> COMPARAISON
+
+
+
+@enduml 
