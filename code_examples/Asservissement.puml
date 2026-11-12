@@ -4,13 +4,13 @@ hide empty description
 
 [*] --> IDLE
 IDLE--> COMPARAISON : consigne
-COMPARAISON --> STOP : |dref-consigne| < 2m 
+COMPARAISON --> STOP : |dref-consigne| < 5m 
 STOP --> [*] 
-COMPARAISON --> DEPLACE_BAS  : Consigne - dref > 2m 
-DEPLACE_BAS --> ARRET_TRANSMISSION : Timeout(0.5s)
+COMPARAISON --> DEPLACE_BAS  : Consigne - dref > 5m 
+DEPLACE_BAS --> ARRET_TRANSMISSION : Timeout (3s)
 ARRET_TRANSMISSION --> COMPARAISON : fin transmission
-COMPARAISON --> DEPLACE_HAUT  : dref - Consigne > 2m 
-DEPLACE_HAUT --> ARRET_TRANSMISSION  : Timeout(0.5s)
+COMPARAISON --> DEPLACE_HAUT  : dref - Consigne > 5m 
+DEPLACE_HAUT --> ARRET_TRANSMISSION  : Timeout (3s)
 ''' ARRET_TRANSMISSION --> COMPARAISON
 
 
