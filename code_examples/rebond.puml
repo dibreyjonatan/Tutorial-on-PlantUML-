@@ -1,0 +1,20 @@
+@startuml
+[*] --> idle : rst
+
+state idle
+state wait_50ms
+state Sortie
+
+idle --> wait_50ms : BP_Babord
+idle --> wait_50ms : BP_Tribord
+idle --> wait_50ms : BP_STBY
+
+wait_50ms -down-> Sortie : fin_tim
+
+Sortie -up-> idle
+
+note right of Sortie
+  on envoie les sorties
+  à la fonction
+end note
+@enduml

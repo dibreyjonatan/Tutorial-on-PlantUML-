@@ -1,0 +1,62 @@
+@startuml
+hide empty description
+
+' --- Définition des états et de leurs sorties ---
+state "0 (Mode Manuel)" as S0 : codeFonction = "0000"\nledSTBY = "11" (CL)\nledBabord = "01" (F.E)\nledTribord = "01" (F.E)\nout_bip = "00"
+
+state "1" as S1 : codeFonction = "0001"\nledSTBY = "00" (OFF)\nledBabord = "10" (ON)\nledTribord = "00" (OFF)\nout_bip = "01" (1 Bip)
+
+state "2" as S2 : codeFonction = "0010"\nledSTBY = "00" (OFF)\nledBabord = "00" (OFF)\nledTribord = "10" (ON)\nout_bip = "01" (1 Bip)
+
+state "3" as S3 : codeFonction = "0011"\nledSTBY = "11" (CL)\nledBabord = "01" (F.E)\nledTribord = "01" (F.E)\nout_bip = "01" (1 Bip)
+
+state "4 (Mode Auto)" as S4 : codeFonction = "0011"\nledSTBY = "10" (ON)\nledBabord = "00" (OFF)\nledTribord = "00" (OFF)\nout_bip = "00"
+
+state "5" as S5 : codeFonction = "0000"\nledSTBY = "10" (ON)\nledBabord = "00" (OFF)\nledTribord = "00" (OFF)\nout_bip = "01" (1 Bip)
+
+state "6" as S6 : start_t = '1' (T_LONG = 5s)\nledSTBY = "00" (OFF)\nledBabord = "10" (ON)\nledTribord = "00" (OFF)\nout_bip = "01" (1 Bip)
+
+state "7" as S7 : codeFonction = "0111" (-1°)\nstart_t = '0'
+
+state "8" as S8 : codeFonction = "0110" (-10°)\nstart_t = '0'\nledSTBY = "00" (OFF)\nledBabord = "11" (CL)\nledTribord = "00" (OFF)\nout_bip = "11" (2 Bip)
+
+state "9" as S9 : start_tim = '1' (T_LONG = 5s)\nledSTBY = "00" (OFF)\nledBabord = "00" (OFF)\nledTribord = "10" (ON)\nout_bip = "01" (1 Bip)
+
+state "10" as S10 : codeFonction = "0100" (+1°)\nstart_tim = '0'
+
+state "11" as S11 : codeFonction = "0101" (+10°)\nstart_tim = '0'\nledSTBY = "00" (OFF)\nledBabord = "00" (OFF)\nledTribord = "11" (CL)\nout_bip = "11" (2 Bip)
+
+' --- Reset asynchrone ---
+[*] --> S0 : raz_n = '0'\n(toutes sorties à '0')
+
+' --- Transitions depuis 0 ---
+S0 --> S1 : Babord_Btn='1' & Tribord_Btn='0' & STBY_Btn='0'
+S1 --> S0 : Babord_Btn='0'
+
+S0 --> S2 : Babord_Btn='0' & Tribord_Btn='1' & STBY_Btn='0'
+S2 --> S0 : Tribord_Btn='0'
+
+S0 --> S3 : Babord_Btn='0' & Tribord_Btn='0' & STBY_Btn='1'
+S3 --> S4 : STBY_Btn='0'
+
+' --- Transitions entre 4 et 5 ---
+S4 --> S5 : Babord_Btn='0' & Tribord_Btn='0' & STBY_Btn='1'
+S5 --> S0 : STBY_Btn='0'
+
+' --- Branche Babord (depuis 4) ---
+S4 --> S6 : Babord_Btn='1' & Tribord_Btn='0' & STBY_Btn='0'\n/ start_t <= '1'
+S6 --> S6 : sinon
+S6 --> S7 : first_temp = 7\n(Babord_Btn='0' avant 5s)
+S7 --> S4 : inconditionnel
+S6 --> S8 : first_temp = 8\n(cmpt = T_LONG = 5s)
+S8 --> S4 : Babord_Btn='0'
+
+' --- Branche Tribord (depuis 4) ---
+S4 --> S9 : Babord_Btn='0' & Tribord_Btn='1' & STBY_Btn='0'\n/ start_tim <= '1'
+S9 --> S9 : sinon
+S9 --> S10 : second_temp = 10\n(Tribord_Btn='0' avant 5s)
+S10 --> S4 : inconditionnel
+S9 --> S11 : second_temp = 11\n(cmpt = T_LONG = 5s)
+S11 --> S4 : Tribord_Btn='0'
+
+@enduml
